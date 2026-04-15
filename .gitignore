@@ -1,0 +1,7 @@
+/docs/api/
+/lib/
+/bin/
+/.shards/
+*.dwarf
+*.o
+/shard.lock

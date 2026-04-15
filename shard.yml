@@ -1,0 +1,16 @@
+name: crystal-appkit
+version: 0.1.0
+
+authors:
+  - Philippe <papilip@github>
+
+description: |
+  Crystal bindings for macOS AppKit.
+  Native menus, dialogs, notifications, status bar, and more.
+
+crystal: ">= 1.15.0"
+
+license: MIT
+
+scripts:
+  postinstall: cd ext && make

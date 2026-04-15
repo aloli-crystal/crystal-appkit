@@ -1,0 +1,131 @@
+= crystal-appkit
+:toc:
+
+**Crystal bindings for macOS AppKit** — native menus, dialogs, notifications, and more.
+
+== Pourquoi ?
+
+Il n'existe pas de shard maintenu pour créer des interfaces macOS natives en Crystal.
+`crystal-appkit` comble ce vide avec une API Crystal idiomatique au-dessus d'un helper Objective-C compilé.
+
+== Installation
+
+Ajouter à votre `shard.yml` :
+
+[source,yaml]
+----
+dependencies:
+  crystal-appkit:
+    github: aloli-crystal/crystal-appkit
+----
+
+Puis :
+
+[source,bash]
+----
+shards install
+----
+
+Le helper Objective-C est compilé automatiquement via le postinstall.
+
+NOTE: macOS uniquement. Requiert Xcode Command Line Tools (`xcode-select --install`).
+
+== Utilisation
+
+=== Menu natif macOS
+
+[source,crystal]
+----
+require "crystal-appkit"
+
+AppKit.init
+
+AppKit::Menu.build("MonApp") do |menu|
+  menu.app_menu("MonApp")     # À propos, Masquer, Quitter
+  menu.edit_menu               # Annuler, Copier, Coller...
+
+  menu.submenu("Fichier") do |m|
+    m.item("Nouveau", key: "n")
+    m.item("Ouvrir…", key: "o")
+    m.separator
+    m.item("Enregistrer", key: "s")
+    m.item("Enregistrer sous…", key: "s", shift: true)
+  end
+
+  menu.window_menu
+end
+
+AppKit.activate
+----
+
+=== Dialogues natifs
+
+[source,crystal]
+----
+require "crystal-appkit"
+
+# Ouvrir un fichier
+path = AppKit::Dialog.open_file("Ouvrir", types: "adoc,txt,md")
+puts path if path
+
+# Sauvegarder
+path = AppKit::Dialog.save_file("Enregistrer", default_name: "document.adoc")
+
+# Ouvrir un dossier
+dir = AppKit::Dialog.open_folder
+
+# Alerte
+AppKit::Dialog.info("Titre", "Message informatif")
+
+# Confirmation (OK / Annuler)
+if AppKit::Dialog.confirm("Attention", "Voulez-vous continuer ?", style: :warning)
+  puts "OK"
+end
+----
+
+=== Notifications
+
+[source,crystal]
+----
+require "crystal-appkit"
+
+AppKit::Notification.send("Export terminé", "Le fichier PDF a été généré.")
+----
+
+== Architecture
+
+Le shard utilise un helper Objective-C (`ext/appkit_helper.m`) compilé en `.o`, lié au binaire Crystal via `@[Link]`. Cela évite les appels `objc_msgSend` variadiques depuis Crystal (fragiles sur ARM64) et fournit une API C simple et stable.
+
+[source]
+----
+Crystal (API haut niveau)
+    ↓ @[Link]
+lib LibAppKit (bindings C)
+    ↓
+ext/appkit_helper.o (Objective-C compilé)
+    ↓
+AppKit.framework (macOS)
+----
+
+== API
+
+[cols="1,2", options="header"]
+|===
+| Module | Fonctionnalités
+
+| `AppKit.init` / `.activate`
+| Initialisation NSApplication
+
+| `AppKit::Menu`
+| Barre de menu native (app_menu, edit_menu, window_menu, submenu personnalisé)
+
+| `AppKit::Dialog`
+| open_file, open_folder, save_file, confirm, info
+
+| `AppKit::Notification`
+| Notifications système macOS
+|===
+
+== Licence
+
+MIT
