@@ -14,6 +14,14 @@ void appkit_init(void) {
     [NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
 }
 
+// Forcer le nom affiché dans la barre de menu macOS
+void appkit_set_app_name(const char *name) {
+    // Le nom dans la barre de menu est déterminé par le titre du premier submenu
+    // On le force aussi via le bundle name si possible
+    NSString *nsName = [NSString stringWithUTF8String:name];
+    [[NSProcessInfo processInfo] performSelector:@selector(setProcessName:) withObject:nsName];
+}
+
 void appkit_activate(void) {
     [NSApp activateIgnoringOtherApps:YES];
 }

@@ -3,6 +3,7 @@ lib LibAppKit
   # Application
   fun appkit_init
   fun appkit_activate
+  fun appkit_set_app_name(name : UInt8*)
 
   # Menu
   fun appkit_menu_create
