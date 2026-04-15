@@ -6,9 +6,11 @@ lib LibAppKit
   fun appkit_set_app_name(name : UInt8*)
 
   # Menu
+  alias MenuActionCallback = (UInt8*) ->
   fun appkit_menu_create
+  fun appkit_menu_set_callback(callback : MenuActionCallback)
   fun appkit_menu_add_submenu(title : UInt8*) : Int32
-  fun appkit_menu_add_item(submenu_index : Int32, title : UInt8*, key : UInt8*, modifier_flags : Int32)
+  fun appkit_menu_add_item(submenu_index : Int32, title : UInt8*, key : UInt8*, modifier_flags : Int32, action_id : UInt8*)
   fun appkit_menu_add_separator(submenu_index : Int32)
   fun appkit_menu_add_app_menu(app_name : UInt8*)
   fun appkit_menu_add_edit_menu

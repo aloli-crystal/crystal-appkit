@@ -32,9 +32,41 @@ void appkit_activate(void) {
 
 static NSMenu *mainMenuBar = nil;
 
+// --- Callback system for menu actions ---
+typedef void (*MenuActionCallback)(const char* action_id);
+static MenuActionCallback globalMenuCallback = NULL;
+
+@interface AppKitMenuTarget : NSObject
+- (void)handleMenuAction:(NSMenuItem *)sender;
+@end
+
+@implementation AppKitMenuTarget
+- (void)handleMenuAction:(NSMenuItem *)sender {
+    if (globalMenuCallback) {
+        // Use the representedObject as action ID
+        NSString *actionId = [sender representedObject];
+        if (actionId) {
+            globalMenuCallback([actionId UTF8String]);
+        }
+    }
+}
+@end
+
+static AppKitMenuTarget *menuTarget = nil;
+
+void appkit_menu_set_callback(MenuActionCallback callback) {
+    globalMenuCallback = callback;
+    if (!menuTarget) {
+        menuTarget = [[AppKitMenuTarget alloc] init];
+    }
+}
+
 void appkit_menu_create(void) {
     mainMenuBar = [[NSMenu alloc] init];
     [NSApp setMainMenu:mainMenuBar];
+    if (!menuTarget) {
+        menuTarget = [[AppKitMenuTarget alloc] init];
+    }
 }
 
 // Ajouter un menu de premier niveau (Fichier, Édition, etc.)
@@ -49,8 +81,9 @@ int appkit_menu_add_submenu(const char *title) {
 }
 
 // Ajouter un item à un sous-menu
+// action_id: identifiant unique pour le callback (peut être NULL pour pas de callback)
 void appkit_menu_add_item(int submenu_index, const char *title, const char *key,
-                          int modifier_flags) {
+                          int modifier_flags, const char *action_id) {
     if (submenu_index < 0 || submenu_index >= [mainMenuBar numberOfItems]) return;
 
     NSMenuItem *parentItem = [mainMenuBar itemAtIndex:submenu_index];
@@ -60,9 +93,17 @@ void appkit_menu_add_item(int submenu_index, const char *title, const char *key,
     NSString *nsTitle = [NSString stringWithUTF8String:title];
     NSString *nsKey = key ? [NSString stringWithUTF8String:key] : @"";
 
+    SEL action = (action_id && menuTarget) ? @selector(handleMenuAction:) : nil;
+    id target = (action_id && menuTarget) ? menuTarget : nil;
+
     NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:nsTitle
-                                                 action:nil
+                                                 action:action
                                           keyEquivalent:nsKey];
+    [item setTarget:target];
+
+    if (action_id) {
+        [item setRepresentedObject:[NSString stringWithUTF8String:action_id]];
+    }
 
     // Modifier flags: 1=Cmd, 2=Shift, 4=Alt, 8=Ctrl
     NSEventModifierFlags flags = 0;
