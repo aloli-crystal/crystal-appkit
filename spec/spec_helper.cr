@@ -1,2 +1,2 @@
 require "spec"
-require "../src/crystal-appkit"
+require "../src/appkit"

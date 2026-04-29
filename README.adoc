@@ -1,4 +1,4 @@
-= crystal-appkit
+= appkit
 :toc:
 
 **Crystal bindings for macOS AppKit** — native menus, dialogs, notifications, and more.
@@ -6,7 +6,7 @@
 == Pourquoi ?
 
 Il n'existe pas de shard maintenu pour créer des interfaces macOS natives en Crystal.
-`crystal-appkit` comble ce vide avec une API Crystal idiomatique au-dessus d'un helper Objective-C compilé.
+`appkit` comble ce vide avec une API Crystal idiomatique au-dessus d'un helper Objective-C compilé.
 
 == Installation
 
@@ -15,8 +15,8 @@ Ajouter à votre `shard.yml` :
 [source,yaml]
 ----
 dependencies:
-  crystal-appkit:
-    github: aloli-crystal/crystal-appkit
+  appkit:
+    github: aloli-crystal/appkit
 ----
 
 Puis :
@@ -36,7 +36,7 @@ NOTE: macOS uniquement. Requiert Xcode Command Line Tools (`xcode-select --insta
 
 [source,crystal]
 ----
-require "crystal-appkit"
+require "appkit"
 
 AppKit.init
 
@@ -62,7 +62,7 @@ AppKit.activate
 
 [source,crystal]
 ----
-require "crystal-appkit"
+require "appkit"
 
 # Ouvrir un fichier
 path = AppKit::Dialog.open_file("Ouvrir", types: "adoc,txt,md")
@@ -87,7 +87,7 @@ end
 
 [source,crystal]
 ----
-require "crystal-appkit"
+require "appkit"
 
 AppKit::Notification.send("Export terminé", "Le fichier PDF a été généré.")
 ----
