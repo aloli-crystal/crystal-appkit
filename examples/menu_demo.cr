@@ -1,4 +1,4 @@
-require "../src/crystal-appkit"
+require "../src/appkit"
 
 # Démo : menu natif macOS en Crystal
 #
@@ -36,4 +36,4 @@ AppKit.activate
 
 # Normalement ici on lancerait la boucle principale,
 # mais pour cette démo on affiche juste une alerte
-AppKit::Dialog.info("crystal-appkit", "Le menu natif macOS est en place !\nRegardez la barre de menu.")
+AppKit::Dialog.info("appkit", "Le menu natif macOS est en place !\nRegardez la barre de menu.")
