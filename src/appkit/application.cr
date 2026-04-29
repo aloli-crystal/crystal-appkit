@@ -5,7 +5,7 @@ module AppKit
   end
 
   # Forcer le nom affiché dans la barre de menu macOS
-  def self.set_app_name(name : String)
+  def self.app_name=(name : String)
     LibAppKit.appkit_set_app_name(name.to_unsafe)
   end
 

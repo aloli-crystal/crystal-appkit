@@ -1,0 +1,7 @@
+# ameba configuration
+#
+# Les noms de paramètre de bloc à 1 lettre (`m` pour menu, `c` pour
+# component, etc.) sont parfaitement clairs en contexte court ; le
+# style ne mérite pas un build cassé.
+Naming/BlockParameterName:
+  Enabled: false
