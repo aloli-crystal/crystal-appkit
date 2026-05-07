@@ -1,8 +1,10 @@
 require "./spec_helper"
+require "yaml"
 
 describe AppKit do
-  it "has a version" do
-    AppKit::VERSION.should eq("0.1.0")
+  it "VERSION matche shard.yml (compile-time read, pas de désynchro possible)" do
+    yml = YAML.parse(File.read(File.join(__DIR__, "..", "shard.yml")))
+    AppKit::VERSION.should eq(yml["version"].as_s)
   end
 end
 

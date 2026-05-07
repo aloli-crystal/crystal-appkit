@@ -7,6 +7,16 @@ Toutes les modifications notables de ce projet sont documentées dans ce fichier
 Le format s'inspire de https://keepachangelog.com/fr/1.1.0/[Keep a Changelog]
 et ce projet suit https://semver.org/lang/fr/[Semantic Versioning].
 
+== 0.1.3 (07 mai 2026)
+
+=== Corrigé
+
+* `AppKit::VERSION` est désormais lue au compile-time depuis
+  `shard.yml` via le macro `read_file`. Avant ce fix, la constante
+  était hardcodée à `"0.1.0"` alors que `shard.yml` était passé à
+  `0.1.2` — désynchronisation silencieuse. Pattern généralisé à
+  l'ensemble des shards aloli-crystal/*.
+
 == 0.1.1 (29 avril 2026)
 
 === Modifié
